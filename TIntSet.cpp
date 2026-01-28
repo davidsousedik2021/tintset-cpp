@@ -1,88 +1,96 @@
 #include <iostream>
 #include <vector>
+
 using namespace std;
+
+// QWord = nezáporné celé číslo (8 bytů)
+using QWord = unsigned long long;
 
 class TIntSet {
 private:
-    vector<unsigned long long> data;
+    vector<QWord> data;
 
-    bool contains(unsigned long long n) const {
-        for (auto x : data) {
-            if (x == n) return true;
-        }
+public:
+    // Přidá číslo do množiny
+    // vrací true, pokud bylo číslo přidáno
+    bool Add(QWord n) {
+       
         return false;
     }
 
-public:
-    bool Add(unsigned long long n) {
-        if (contains(n)) return false;
-        data.push_back(n); // jediné místo s push_back
-        return true;
+    // TODO: doplnit metody Delete a isElement
+
+
+    // Vrátí mohutnost množiny (počet prvků)
+    QWord Cardinality() const {
+        return 0;
     }
 
-    bool IsElement(unsigned long long n) const {
-        return contains(n);
+    // Zjistí, zda se dvě množiny rovnají
+    bool IsEqual(const TIntSet& A) const {
+ 
+        return false;
     }
 
-    TIntSet Union(const TIntSet& A) const {
-        TIntSet result = *this;
-        for (auto x : A.data) {
-            result.Add(x); // Add hlídá duplicity
-        }
-        return result;
-    }
+    // TODO: doplnit metody IsSubset, Union, Intersection
 
-    TIntSet Intersection(const TIntSet& A) const {
-        TIntSet result;
-        for (auto x : data) {
-            if (A.IsElement(x)) {
-                result.Add(x); // žádný push_back mimo Add
-            }
-        }
-        return result;
-    }
-
-    void Print() const {
-        cout << "{";
-        for (size_t i = 0; i < data.size(); i++) {
-            cout << data[i];
-            if (i + 1 < data.size()) cout << ", ";
-        }
-        cout << "}\n";
-    }
+    
 };
 
 int main() {
-    cout << boolalpha;
+    cout << "=== TESTOVANI TRIDY TIntSet ===" << endl;
 
-    // test Add + Print
-    TIntSet s;
-    cout << "Pridani 5: " << s.Add(5) << "\n";        // true
-    cout << "Pridani 5 znovu: " << s.Add(5) << "\n";  // false
-    cout << "Pridani 10: " << s.Add(10) << "\n";      // true
-    cout << "Mnozina s: ";
-    s.Print();
+    TIntSet S;
+    TIntSet A;
 
-    // test Union + Intersection + IsElement
-    TIntSet s1, s2;
-    s1.Add(1); s1.Add(2); s1.Add(3);
-    s2.Add(2); s2.Add(3); s2.Add(4);
+    cout << "\n1) TEST Add()" << endl;
+    cout << "Pridani 5 do S (ocekavano: 1): "
+         << S.Add(5) << endl;
+    cout << "Pridani 3 do S (ocekavano: 1): "
+         << S.Add(3) << endl;
+    cout << "Pridani 5 znovu (ocekavano: 0): "
+         << S.Add(5) << endl;
 
-    cout << "2 je v s1: " << s1.IsElement(2) << "\n"; // true
-    cout << "4 je v s1: " << s1.IsElement(4) << "\n"; // false
+    cout << "\n2) TEST Cardinality()" << endl;
+    cout << "Pocet prvku v S (ocekavano: 2): "
+         << S.Cardinality() << endl;
 
-    cout << "Mnozina s1: ";
-    s1.Print();
-    cout << "Mnozina s2: ";
-    s2.Print();
+    cout << "\n3) TEST IsElement()" << endl;
+    cout << "Je 3 v S? (ocekavano: 1): "
+         << S.IsElement(3) << endl;
+    cout << "Je 10 v S? (ocekavano: 0): "
+         << S.IsElement(10) << endl;
 
-    TIntSet sjednoceni = s1.Union(s2);
-    cout << "Sjednoceni: ";
-    sjednoceni.Print();
+    cout << "\n4) TEST Delete()" << endl;
+    cout << "Mazani 3 ze S (ocekavano: 1): "
+         << S.Delete(3) << endl;
+    cout << "Mazani 3 znovu (ocekavano: 0): "
+         << S.Delete(3) << endl;
+    cout << "Pocet prvku v S (ocekavano: 1): "
+         << S.Cardinality() << endl;
 
-    TIntSet prunik = s1.Intersection(s2);
-    cout << "Prunik: ";
-    prunik.Print();
+    cout << "\n5) Priprava druhe mnoziny A" << endl;
+    A.Add(5);
+    A.Add(8);
+
+    cout << "\n6) TEST IsEqual()" << endl;
+    cout << "Jsou S a A stejne? (ocekavano: 0): "
+         << S.IsEqual(A) << endl;
+
+    cout << "\n7) TEST IsSubSet()" << endl;
+    cout << "Je A podmnozina S? (ocekavano: 0): "
+         << S.IsSubSet(A) << endl;
+
+    cout << "\n8) TEST Union a Intersection" << endl;
+    TIntSet U = S.Union(A);
+    TIntSet I = S.Intersection(A);
+
+    cout << "Union - pocet prvku (ocekavano: 2): "
+         << U.Cardinality() << endl;
+    cout << "Intersection - pocet prvku (ocekavano: 1): "
+         << I.Cardinality() << endl;
+
+    cout << "\n=== KONEC PROGRAMU ===" << endl;
 
     return 0;
 }
